@@ -14,15 +14,10 @@ type Buffer interface {
 	// Len 用于获取本缓冲器中的数据数量。
 	Len() uint32
 	// Put 用于向缓冲器放入数据。
-	// 注意！本方法应该是非阻塞的。
-	// 若缓冲器已关闭则会直接返回非nil的错误值。
 	Put(datum interface{}) (bool, error)
 	// Get 用于从缓冲器获取器。
-	// 注意！本方法应该是非阻塞的。
-	// 若缓冲器已关闭则会直接返回非nil的错误值。
 	Get() (interface{}, error)
 	// Close 用于关闭缓冲器。
-	// 若缓冲器之前已关闭则返回false，否则返回true。
 	Close() bool
 	// Closed 用于判断缓冲器是否已关闭。
 	Closed() bool

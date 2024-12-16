@@ -8,8 +8,6 @@ type Option interface {
 }
 
 // OptWithLocation 代表一个日志记录器选项的类型。
-// 该选项的值是bool类型的，
-// 代表表示记录日志时是否带有调用方的代码位置。
 type OptWithLocation struct {
 	Value bool
 }

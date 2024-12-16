@@ -6,12 +6,9 @@ import "sync/atomic"
 type BucketStatus uint8
 
 const (
-	// BUCKET_STATUS_NORMAL 代表散列桶正常。
-	BUCKET_STATUS_NORMAL BucketStatus = 0
-	// BUCKET_STATUS_UNDERWEIGHT 代表散列桶过轻。
+	BUCKET_STATUS_NORMAL      BucketStatus = 0
 	BUCKET_STATUS_UNDERWEIGHT BucketStatus = 1
-	// BUCKET_STATUS_OVERWEIGHT 代表散列桶过重。
-	BUCKET_STATUS_OVERWEIGHT BucketStatus = 2
+	BUCKET_STATUS_OVERWEIGHT  BucketStatus = 2
 )
 
 // PairRedistributor 代表针对键-元素对的再分布器。
@@ -27,20 +24,13 @@ type PairRedistributor interface {
 
 // myPairRedistributor 代表PairRedistributor的默认实现类型。
 type myPairRedistributor struct {
-	// loadFactor 代表装载因子。
-	loadFactor float64
-	// upperThreshold 代表散列桶重量的上阈限。
-	// 当某个散列桶的尺寸增至此值时会触发再散列。
-	upperThreshold uint64
-	// overweightBucketCount 代表过重的散列桶的计数。
+	loadFactor            float64
+	upperThreshold        uint64
 	overweightBucketCount uint64
-	// emptyBucketCount 代表空的散列桶的计数。
-	emptyBucketCount uint64
+	emptyBucketCount      uint64
 }
 
 // newDefaultPairRedistributor 会创建一个PairRedistributor类型的实例。
-// 参数loadFactor代表散列桶的负载因子。
-// 参数bucketNumber代表散列桶的数量。
 func newDefaultPairRedistributor(loadFactor float64, bucketNumber int) PairRedistributor {
 	if loadFactor <= 0 {
 		loadFactor = DEFAULT_BUCKET_LOAD_FACTOR
@@ -67,14 +57,6 @@ func (pr *myPairRedistributor) UpdateThreshold(pairTotal uint64, bucketNumber in
 	if average < 100 {
 		average = 100
 	}
-	// defer func() {
-	// 	fmt.Printf(bucketCountTemplate,
-	// 		pairTotal,
-	// 		bucketNumber,
-	// 		average,
-	// 		atomic.LoadUint64(&pr.upperThreshold),
-	// 		atomic.LoadUint64(&pr.emptyBucketCount))
-	// }()
 	atomic.StoreUint64(&pr.upperThreshold, uint64(average*pr.loadFactor))
 }
 
@@ -90,15 +72,6 @@ var bucketStatusTemplate = `Check bucket status:
 `
 
 func (pr *myPairRedistributor) CheckBucketStatus(pairTotal uint64, bucketSize uint64) (bucketStatus BucketStatus) {
-	// defer func() {
-	// 	fmt.Printf(bucketStatusTemplate,
-	// 		pairTotal,
-	// 		bucketSize,
-	// 		atomic.LoadUint64(&pr.upperThreshold),
-	// 		atomic.LoadUint64(&pr.overweightBucketCount),
-	// 		atomic.LoadUint64(&pr.emptyBucketCount),
-	// 		bucketStatus)
-	// }()
 	if bucketSize > DEFAULT_BUCKET_MAX_SIZE ||
 		bucketSize >= atomic.LoadUint64(&pr.upperThreshold) {
 		atomic.AddUint64(&pr.overweightBucketCount, 1)
@@ -123,12 +96,6 @@ func (pr *myPairRedistributor) Redistribe(
 	bucketStatus BucketStatus, buckets []Bucket) (newBuckets []Bucket, changed bool) {
 	currentNumber := uint64(len(buckets))
 	newNumber := currentNumber
-	// defer func() {
-	// 	fmt.Printf(redistributionTemplate,
-	// 		bucketStatus,
-	// 		currentNumber,
-	// 		newNumber)
-	// }()
 	switch bucketStatus {
 	case BUCKET_STATUS_OVERWEIGHT:
 		if atomic.LoadUint64(&pr.overweightBucketCount)*4 < currentNumber {

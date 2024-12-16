@@ -69,8 +69,7 @@ type Analyzer interface {
 	Module
 	// RespParsers 会返回当前分析器使用的响应解析函数的列表。
 	RespParsers() []ParseResponse
-	// Analyze 会根据规则分析响应并返回请求和条目。
-	// 响应需要分别经过若干响应解析函数的处理，然后合并结果。
+
 	Analyze(resp *Response) ([]Data, []error)
 }
 
@@ -81,14 +80,11 @@ type ProcessItem func(item Item) (result Item, err error)
 // 该接口的实现类型必须是并发安全的！
 type Pipeline interface {
 	Module
-	// ItemProcessors 会返回当前条目处理管道使用的条目处理函数的列表。
+
 	ItemProcessors() []ProcessItem
-	// Send 会向条目处理管道发送条目。
-	// 条目需要依次经过若干条目处理函数的处理。
+
 	Send(item Item) []error
-	// FailFast方法会返回一个布尔值。该值表示当前条目处理管道是否是快速失败的。
-	// 这里的快速失败是指：只要在处理某个条目时在某一个步骤上出错，
-	// 那么条目处理管道就会忽略掉后续的所有处理步骤并报告错误。
+
 	FailFast() bool
 	// 设置是否快速失败。
 	SetFailFast(failFast bool)

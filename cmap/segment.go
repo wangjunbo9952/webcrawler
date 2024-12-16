@@ -8,19 +8,10 @@ import (
 
 // Segment 代表并发安全的散列段的接口。
 type Segment interface {
-	// Put 会根据参数放入一个键-元素对。
-	// 第一个返回值表示是否新增了键-元素对。
 	Put(p Pair) (bool, error)
-	// Get 会根据给定参数返回对应的键-元素对。
-	// 该方法会根据给定的键计算哈希值。
 	Get(key string) Pair
-	// GetWithHash 会根据给定参数返回对应的键-元素对。
-	// 注意！参数keyHash应该是基于参数key计算得出哈希值。
 	GetWithHash(key string, keyHash uint64) Pair
-	// Delete 会删除指定键的键-元素对。
-	// 若返回值为true则说明已删除，否则说明未找到该键。
 	Delete(key string) bool
-	// Size 用于获取当前段的尺寸（其中包含的散列桶的数量）。
 	Size() uint64
 }
 
@@ -98,9 +89,6 @@ func (s *segment) Size() uint64 {
 	return atomic.LoadUint64(&s.pairTotal)
 }
 
-// redistribute 会检查给定参数并设置相应的阈值和计数，
-// 并在必要时重新分配所有散列桶中的所有键-元素对。
-// 注意！必须在互斥锁的保护下调用本方法！
 func (s *segment) redistribute(pairTotal uint64, bucketSize uint64) (err error) {
 	defer func() {
 		if p := recover(); p != nil {

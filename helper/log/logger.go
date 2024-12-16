@@ -5,7 +5,6 @@ import (
 	"io"
 	"os"
 	"sync"
-
 	"webcrawler/helper/log/base"
 	"webcrawler/helper/log/logrus"
 )

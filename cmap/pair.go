@@ -9,11 +9,7 @@ import (
 
 // linkedPair 代表单向链接的键-元素对的接口。
 type linkedPair interface {
-	// Next 用于获得下一个键-元素对。
-	// 若返回值为nil，则说明当前已在单链表的末尾。
 	Next() Pair
-	// SetNext 用于设置下一个键-元素对。
-	// 这样就可以形成一个键-元素对的单链表。
 	SetNext(nextPair Pair) error
 }
 

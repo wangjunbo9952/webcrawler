@@ -2,8 +2,6 @@ package cmap
 
 const (
 	// DEFAULT_BUCKET_LOAD_FACTOR 代表默认的装载因子。
-	// 当散列段中的某个散列桶的尺寸超过了
-	// 本因子与当散列段尺寸的乘积，就会触发再散列。
 	DEFAULT_BUCKET_LOAD_FACTOR float64 = 0.75
 	// DEFAULT_BUCKET_NUMBER 代表一个散列段包含的散列桶的默认数量。
 	DEFAULT_BUCKET_NUMBER int = 16

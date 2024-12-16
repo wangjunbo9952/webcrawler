@@ -83,7 +83,6 @@ func getLetter(moduleType Type) (bool, string) {
 }
 
 // typeToLetter 用于根据给定的组件类型获得其字母代号。
-// 若给定的组件类型不合法，则第一个结果值会是false。
 func typeToLetter(moduleType Type) (bool, string) {
 	switch moduleType {
 	case TYPE_DOWNLOADER:
@@ -98,7 +97,6 @@ func typeToLetter(moduleType Type) (bool, string) {
 }
 
 // letterToType 用于根据字母代号获得对应的组件类型。
-// 若给定的字母代号不合法，则第一个结果值会是false。
 func letterToType(letter string) (bool, Type) {
 	switch letter {
 	case "D":
